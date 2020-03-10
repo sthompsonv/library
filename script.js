@@ -1,13 +1,30 @@
 const bookContainer = document.querySelector(".book-container");
 const bookForm = document.querySelector(".new-book");
+const formButtons = document.querySelector(".form-buttons");
 const bookNewButton = document.querySelector('.new-book-button');
-const addBookButton = document.querySelector('#add-book-button');
-const cancelBookButton = document.querySelector('#cancel-book-button');
+//const addBookButton = document.querySelector('#add-book-button');
+//const cancelBookButton = document.querySelector('#cancel-book-button');
 
+
+const editButton = document.createElement('button');
+editButton.innerHTML = "Edit";
+editButton.type = "submit";
+editButton.id = 'edit-book-button';
+
+const addButton = document.createElement('button');
+addButton.innerHTML = "Add Book";
+addButton.type = "submit";
+addButton.id = 'add-book-button';
+formButtons.appendChild(addButton);
+
+const cancelButton = document.createElement('button');
+cancelButton.innerHTML = "Cancel";
+cancelButton.id = 'cancel-book-button';
+formButtons.appendChild(cancelButton);
 
 bookNewButton.addEventListener("click", newBookHandler);
 bookForm.addEventListener("submit", addBookForm);
-
+cancelButton.addEventListener("click", cancelForm);
 
 let myLibrary = [];
 
@@ -95,8 +112,8 @@ function generateLibrary(book) {
       <p class="display-description">${book.description}</p>
       <h3 class="display-read">${book.read}</h3>
     </div>
-    <button class="display-remove" onclick="removeBook(${book.id})">Remove</button>
     <button class="display-edit" onclick="editBookFields(${book.id})">Edit</button>
+    <button class="display-remove" onclick="removeBook(${book.id})">Remove</button>
   </article>
   `
 }
@@ -116,8 +133,7 @@ function removeBook(id) {
 
 function editBookFields(id) {
   bookForm.style.visibility = "visible";
-  addBookButton.innerHTML = "Update";
-
+ 
   let book = myLibrary[id];
 
   document.querySelector("#title").value = book.title;
@@ -144,7 +160,13 @@ function editBookFields(id) {
   console.log(idDiv);
   console.log(parseInt(idDiv.id.substr(12), 10));
 
-  //bookForm.removeEventListener("submit", addBookForm);
+  formButtons.removeChild(addButton);
+  formButtons.removeChild(cancelButton)
+
+  formButtons.appendChild(editButton);
+  formButtons.appendChild(cancelButton);
+
+  bookForm.removeEventListener("submit", addBookForm);
   bookForm.addEventListener("submit", addEditedBook);
 }
 

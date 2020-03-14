@@ -6,21 +6,21 @@ const bookNewButton = document.querySelector('.new-book-button');
 //const cancelBookButton = document.querySelector('#cancel-book-button');
 
 
-const editButton = document.createElement('button');
-editButton.innerHTML = "Edit";
+const editButton = document.createElement('input');
+editButton.value = "Edit";
 editButton.type = "submit";
 editButton.id = 'edit-book-button';
 
-const addButton = document.createElement('button');
-addButton.innerHTML = "Add Book";
+const addButton = document.createElement('input');
+addButton.value = "Add";
 addButton.type = "submit";
 addButton.id = 'add-book-button';
-formButtons.appendChild(addButton);
+formButtons.appendChild(addButton);  //getting rid of formButtons class
 
 const cancelButton = document.createElement('button');
 cancelButton.innerHTML = "Cancel";
 cancelButton.id = 'cancel-book-button';
-formButtons.appendChild(cancelButton);
+formButtons.appendChild(cancelButton); //getting rid of formButtons class
 
 bookNewButton.addEventListener("click", newBookHandler);
 bookForm.addEventListener("submit", addBookForm);
@@ -123,6 +123,15 @@ function cancelForm() {
   bookForm.reset();
   bookForm.style.visibility = "hidden";
   bookNewButton.addEventListener("click", newBookHandler);
+
+  if (formButtons.children[0].value == "Edit") {
+    formButtons.removeChild(editButton); //getting rid of formButtons class
+    formButtons.removeChild(cancelButton) //getting rid of formButtons class
+
+    formButtons.appendChild(addButton); //getting rid of formButtons class
+    formButtons.appendChild(cancelButton); //getting rid of formButtons class
+  }
+  
 }
 
 
@@ -135,6 +144,16 @@ function editBookFields(id) {
   bookForm.style.visibility = "visible";
  
   let book = myLibrary[id];
+ 
+  console.log(book);
+
+  formButtons.removeChild(addButton); //getting rid of formButtons class
+  formButtons.removeChild(cancelButton) //getting rid of formButtons class
+
+  formButtons.appendChild(editButton); //getting rid of formButtons class
+  formButtons.appendChild(cancelButton); //getting rid of formButtons class
+
+  
 
   document.querySelector("#title").value = book.title;
   document.querySelector("#author").value = book.author;
@@ -154,51 +173,52 @@ function editBookFields(id) {
 
   let idDiv = document.createElement('div');
   idDiv.id = `placeHolder-${book.id}`;
+  idDiv.type = "text";
   idDiv.style.visibility = 'hidden';
   bookForm.appendChild(idDiv);
 
   console.log(idDiv);
   console.log(parseInt(idDiv.id.substr(12), 10));
 
-  formButtons.removeChild(addButton);
-  formButtons.removeChild(cancelButton)
-
-  formButtons.appendChild(editButton);
-  formButtons.appendChild(cancelButton);
-
-  bookForm.removeEventListener("submit", addBookForm);
+  //bookForm.removeEventListener("submit", addBookForm);
   bookForm.addEventListener("submit", addEditedBook);
+  
 }
 
 
 function addEditedBook(event) {
   let id = parseInt(event.target.lastChild.id.substr(12), 10);
+  
   let book = myLibrary[id];
-
+  console.log(id);
+  console.log(book);
   console.log(`"${book.title}" edited`);
-
+  
  
   let inputs = parseForm(this);
   let editedBook = createBookObject(inputs);
-  console.log(editedBook);
-  console.log(editedBook.id);
 
-  /*
-  let formBookId = document.getElementById(`placeHolder-${id}`)
-  
-  console.log(formBookId);
- 
-  formBookId.parentNode.removeChild(formBookId);
+  console.log(this);
 
   editedBook.id = id;
 
+  console.log(editedBook);
+  console.log(editedBook.id);
+
+  
+  let formBookId = document.getElementById(`placeHolder-${id}`)
+
+  formBookId.parentNode.removeChild(formBookId);
+
   myLibrary[editedBook.id] = editedBook;
+
+  console.log(myLibrary)
   
   let oldBook = document.getElementById(`${editedBook.id}`);
   let newBook = document.createRange().createContextualFragment(generateLibrary(myLibrary[editedBook.id]));
 
   bookContainer.replaceChild(newBook, oldBook);
-  */
+  
 }
 
 
